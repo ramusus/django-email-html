@@ -1,15 +1,20 @@
-Application substitutes built-in ``send_mail`` function by new smart ``send_mail`` function
+This application can be used for quickly switching all emails of site from plain-text to html. For using it you need to do 2 steps:
 
-old: send_mail(subject, message, from_email, recipient_list, fail_silently=False, auth_user=None, auth_password=None, connection=None)
-new: send_mail(subject, message, from_email=None, recipient_list=None, fail_silently=False, auth_user=None, auth_password=None, connection=None)
+* add ``email_html`` to ``INSTALLED_APPS`` higher, then other third-part applications;
+* change email templates to html version;
 
-With few new features:
+Application substitutes built-in ``send_mail`` function by new smart ``send_mail`` function.
+
+build-in: send_mail(subject, message, from_email, recipient_list, fail_silently=False, auth_user=None, auth_password=None, connection=None)
+new one: send_mail(subject, message, from_email=None, recipient_list=None, fail_silently=False, auth_user=None, auth_password=None, connection=None)
+
+Few new features:
 
 * message attribute using for html or plain-test message body. If it contains html, plain-text is generating automatically basing on html body;
 * from_email attribute is not required. By default it will be equal to ``settings.DEFAULT_FROM_EMAIL``;
 * Depending on ``settings.EMAIL_ADMIN_DUPLICATE`` all copies of email messages also sending to ``ADMIN`` emails (using bcc header);
 
-Using:
+New function cam be used:
 
     send_mail(subj, html, recipient_list=emails)
 
