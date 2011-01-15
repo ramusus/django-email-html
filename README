@@ -21,4 +21,4 @@ Requirements:
 Important things:
 
 * Place ``email_html`` application in ``INSTALLED_APPS`` before all other applications, which sending emails, that you need to make html based by default;
-* Html template for email must contains <html> tag, otherwise function would think this is a plain-text body;
+* Html body must contains <html> tag, otherwise function would think this is a plain-text body;
