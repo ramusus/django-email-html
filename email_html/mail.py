@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, EmailMessage
 from templatetags.email_html import html2text, extract_urllinks
+import re
 
 def send_mail(subject, message, from_email=None, recipient_list=None,
               fail_silently=False, auth_user=None, auth_password=None,
@@ -17,6 +18,7 @@ def send_mail(subject, message, from_email=None, recipient_list=None,
 
     if message.find('<html>') != -1:
         message_plaintext = html2text(extract_urllinks(message))
+        message_plaintext = re.sub(r'http://\n', 'http://', message_plaintext)
         if 'mailer' in settings.INSTALLED_APPS:
             from mailer import send_html_mail
             return send_html_mail(subject=subject, message=message_plaintext, message_html=message,
