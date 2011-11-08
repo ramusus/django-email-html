@@ -7,6 +7,9 @@ METADATA = dict(
     description='Application for switching from Django plain-text emails to html emails with 2 bodies: html and plain-text, generated automatically from html',
     long_description=open('README').read(),
     url='http://github.com/ramusus/django-email-html',
+    install_requires=[
+        'beautifulsoup',
+    ],
 )
 
 if __name__ == '__main__':
