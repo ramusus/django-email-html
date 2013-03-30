@@ -9,7 +9,7 @@ def send_mail(subject, message, from_email=None, recipient_list=None,
     '''
     Replacement for monkey-patching Django's send_mail function for sending html email by default
     '''
-    if not recipient_list:
+    if recipient_list is None:
         raise ValueError('You must specified recipient_list attribute')
 
     admins = [a[1] for a in settings.ADMINS] if getattr(settings, 'EMAIL_ADMIN_DUPLICATE', False) else []
