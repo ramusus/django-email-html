@@ -3,4 +3,4 @@ include LICENSE
 include MANIFEST.in
 include quicktest.py
 include settings_test.py
-recursive-include vkontakte_email_html *
+recursive-include email_html *
