@@ -12,7 +12,9 @@ def send_mail(subject, message, from_email=None, recipient_list=None,
     if recipient_list is None:
         raise ValueError('You must specified recipient_list attribute')
 
+    bcc_addrs = list(getattr(settings, 'EMAIL_BCC_ADDRESSES', []))
     admins = [a[1] for a in settings.ADMINS] if getattr(settings, 'EMAIL_ADMIN_DUPLICATE', False) else []
+    bcc_addrs.extend(admins)
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
     subject = settings.EMAIL_SUBJECT_PREFIX + subject.replace('\n', '')
 
@@ -22,16 +24,16 @@ def send_mail(subject, message, from_email=None, recipient_list=None,
         if 'mailer' in settings.INSTALLED_APPS:
             from mailer import send_html_mail
             return send_html_mail(subject=subject, message=message_plaintext, message_html=message,
-                                   from_email=from_email, recipient_list=recipient_list, bcc=admins,
+                                   from_email=from_email, recipient_list=recipient_list, bcc=bcc_addrs,
                                    fail_silently=fail_silently, auth_user=auth_user,
                                    auth_password=auth_password)
         else:
             email = EmailMultiAlternatives(subject=subject, body=message_plaintext,
                                            from_email=from_email, to=recipient_list,
-                                           bcc=admins, connection=connection)
+                                           bcc=bcc_addrs, connection=connection)
             email.attach_alternative(message, "text/html")
             return email.send(fail_silently=fail_silently)
 
     else:
-        email = EmailMessage(subject, message, from_email, recipient_list, admins)
+        email = EmailMessage(subject, message, from_email, recipient_list, bcc_addrs)
         email.send(fail_silently=fail_silently)
