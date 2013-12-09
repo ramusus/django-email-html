@@ -1,7 +1,7 @@
 # substitute send_mail function.
 from django.conf import settings
 from django.contrib.auth.models import User
-from mail import send_mail as send_html_mail
+from .mail import send_mail as send_html_mail
 
 from django.core import mail
 mail.send_mail = send_html_mail
