@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, EmailMessage
-from templatetags.email_html import html2text, extract_urllinks
+from .templatetags.email_html import html2text, extract_urllinks
 import re
 
 def send_mail(subject, message, from_email=None, recipient_list=None,
