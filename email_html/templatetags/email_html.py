@@ -1,6 +1,6 @@
 from django import template
 from subprocess import Popen, PIPE
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 register = template.Library()
 
