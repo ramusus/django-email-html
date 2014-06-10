@@ -29,10 +29,10 @@ New function can be used:
 
 ## Requirements:
 
-* BeautifulSoup
+* beautifulsoup4
 * w3m (for generating plain-text from html)
 
 ## Important notes:
 
 * Place ``email_html`` application in ``INSTALLED_APPS`` before all other applications, which sending emails you need to make html based by default;
-* Html body must contains <html> tag, otherwise function would think this is a plain-text body;
+* Html body must contains ``<html>`` tag, otherwise function would think this is a plain-text body;
