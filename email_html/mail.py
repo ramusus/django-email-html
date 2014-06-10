@@ -18,7 +18,7 @@ def send_mail(subject, message, from_email=None, recipient_list=None,
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
     subject = settings.EMAIL_SUBJECT_PREFIX + subject.replace('\n', '')
 
-    if message.find('<html>') != -1:
+    if message.find('<html') != -1:
         message_plaintext = html2text(extract_urllinks(message))
         message_plaintext = re.sub(r'http://\n', 'http://', message_plaintext)
         if 'mailer' in settings.INSTALLED_APPS:
