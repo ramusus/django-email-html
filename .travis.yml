@@ -1,13 +1,18 @@
 language: python
 python:
   - "2.7"
+  - "3.0"
 env:
   - DJANGO=1.4
+  - DJANGO=1.5
+  - DJANGO=1.6
 install:
-  - pip install -q Django>=$DJANGO --use-mirrors
-  - pip install -q coveralls --use-mirrors
-  - pip install -q . --use-mirrors
+  - DJANGO_VER=$(./travis_django_version.py $DJANGO)
+  - pip install $DJANGO_VER
+  - pip install coveralls
+  - pip install .
 script:
+  - django-admin.py --version
   - coverage run --source=email_html quicktest.py email_html
 after_success:
   - coveralls
