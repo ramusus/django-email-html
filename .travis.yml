@@ -8,6 +8,7 @@ env:
   - DJANGO=1.4
   - DJANGO=1.5
   - DJANGO=1.6
+  - DJANGO=1.7
 install:
   - DJANGO_VER=$(./travis_django_version.py $DJANGO)
   - pip install $DJANGO_VER
