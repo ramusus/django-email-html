@@ -3,6 +3,12 @@ import sys
 import argparse
 from django.conf import settings
 
+'''
+QuickDjangoTest module for testing in Travis CI https://travis-ci.org
+Changes log:
+ * 2014-10-24 updated for compatibility with Django 1.7
+'''
+
 class QuickDjangoTest(object):
     """
     A quick way to run the Django test suite without a fully-configured project.
@@ -16,6 +22,7 @@ class QuickDjangoTest(object):
     """
     DIRNAME = os.path.dirname(__file__)
     INSTALLED_APPS = (
+        'email_html',
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
@@ -27,22 +34,26 @@ class QuickDjangoTest(object):
         # Get the version of the test suite
         self.version = self.get_test_version()
         # Call the appropriate one
-        if self.version == 'new':
-            self._new_tests()
+        if self.version == '1.7':
+            self._tests_1_7()
+        elif self.version == '1.2':
+            self._tests_1_2()
         else:
-            self._old_tests()
+            self._tests_old()
 
     def get_test_version(self):
         """
         Figure out which version of Django's test suite we have to play with.
         """
         from django import VERSION
-        if VERSION[0] == 1 and VERSION[1] >= 2:
-            return 'new'
+        if VERSION[0] == 1 and VERSION[1] >= 7:
+            return '1.7'
+        elif VERSION[0] == 1 and VERSION[1] >= 2:
+            return '1.2'
         else:
-            return 'old'
+            return
 
-    def _old_tests(self):
+    def _tests_old(self):
         """
         Fire up the Django test suite from before version 1.2
         """
@@ -59,9 +70,9 @@ class QuickDjangoTest(object):
         if failures:
             sys.exit(failures)
 
-    def _new_tests(self):
+    def _tests_1_2(self):
         """
-        Fire up the Django test suite developed for version 1.2
+        Fire up the Django test suite developed for version 1.2 and up
         """
         INSTALLED_APPS, settings_test = self.custom_settings()
 
@@ -77,11 +88,42 @@ class QuickDjangoTest(object):
                     'PORT': '',
                 }
             },
-            INSTALLED_APPS = self.INSTALLED_APPS + INSTALLED_APPS + self.apps,
+            INSTALLED_APPS = self.INSTALLED_APPS,# + INSTALLED_APPS + self.apps,
             **settings_test
         )
 
         from django.test.simple import DjangoTestSuiteRunner
+        failures = DjangoTestSuiteRunner().run_tests(self.apps, verbosity=1)
+        if failures:
+            sys.exit(failures)
+
+    def _tests_1_7(self):
+        """
+        Fire up the Django test suite developed for version 1.7 and up
+        """
+        INSTALLED_APPS, settings_test = self.custom_settings()
+
+        settings.configure(
+            DEBUG = True,
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': os.path.join(self.DIRNAME, 'database.db'),
+                    'USER': '',
+                    'PASSWORD': '',
+                    'HOST': '',
+                    'PORT': '',
+                }
+            },
+            MIDDLEWARE_CLASSES = ('django.middleware.common.CommonMiddleware',
+                                  'django.middleware.csrf.CsrfViewMiddleware'),
+            INSTALLED_APPS = self.INSTALLED_APPS,# + INSTALLED_APPS + self.apps,
+            **settings_test
+        )
+
+        from django.test.simple import DjangoTestSuiteRunner
+        import django
+        django.setup()
         failures = DjangoTestSuiteRunner().run_tests(self.apps, verbosity=1)
         if failures:
             sys.exit(failures)
