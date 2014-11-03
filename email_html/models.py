@@ -11,7 +11,7 @@ if django.VERSION[0] == 1 and django.VERSION[1] >= 7:
     try:
         from django.contrib.auth import get_user_model
         User = get_user_model()
-        # TODO: impossible to user custom user model in Django 1.7 due to exception
+        # TODO: impossible to use custom user model in Django 1.7 due to exception
         # django.core.exceptions.AppRegistryNotReady: Models aren't loaded yet.
     except AppRegistryNotReady:
         from django.contrib.auth.models import User
