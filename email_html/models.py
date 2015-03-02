@@ -1,10 +1,12 @@
 # substitute send_mail function.
 from django.conf import settings
 from django.core import mail
-from .mail import send_mail as send_html_mail
 import django
 
+from .mail import send_mail as send_html_mail
+
 mail.send_mail = send_html_mail
+
 
 if django.VERSION[0] == 1 and django.VERSION[1] >= 7:
     from django.core.exceptions import AppRegistryNotReady
@@ -25,10 +27,10 @@ else:
 
 
 def email_user(self, subject, message, from_email=None, **kwargs):
-     """
-     Sends an email to this User.
-     """
-     send_html_mail(subject, message, from_email, [self.email], **kwargs)
+    """
+    Sends an email to this User.
+    """
+    send_html_mail(subject, message, from_email, [self.email], **kwargs)
 
 User.email_user = email_user
 
