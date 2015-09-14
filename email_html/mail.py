@@ -5,8 +5,8 @@ import re
 from .templatetags.email_html import html2text, extract_urllinks
 
 
-def send_mail(subject, message, from_email=None, recipient_list=None, fail_silently=False, auth_user=None,
-              auth_password=None, connection=None):
+def send_mail(subject, message=None, from_email=None, recipient_list=None, fail_silently=False, auth_user=None,
+              auth_password=None, connection=None, html_message=None):
     """
     Replacement for monkey-patching Django's send_mail function for sending html email by default
     """
@@ -18,6 +18,8 @@ def send_mail(subject, message, from_email=None, recipient_list=None, fail_silen
     bcc_addrs.extend(admins)
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
     subject = settings.EMAIL_SUBJECT_PREFIX + subject.replace('\n', '')
+
+    message = html_message or message
 
     if message.find('<html') != -1:
         message_plaintext = html2text(extract_urllinks(message))
