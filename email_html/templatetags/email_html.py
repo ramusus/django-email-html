@@ -17,7 +17,7 @@ def html2text(value):
     """
     try:
         cmd = "w3m -dump -T text/html -O utf-8"
-        proc = Popen(cmd, shell = True, stdin = PIPE, stdout = PIPE)
+        proc = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, universal_newlines=True)
         return proc.communicate(str(value))[0]
     except OSError:
         # something bad happened, so just return the input
