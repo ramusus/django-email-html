@@ -2,6 +2,11 @@ from django import template
 from subprocess import Popen, PIPE
 from bs4 import BeautifulSoup
 
+try:
+    unicode_type = unicode
+except NameError:
+    unicode_type = str
+
 register = template.Library()
 
 @register.filter
@@ -12,7 +17,7 @@ def html2text(value):
     """
     try:
         cmd = "w3m -dump -T text/html -O utf-8"
-        proc = Popen(cmd, shell = True, stdin = PIPE, stdout = PIPE)
+        proc = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, universal_newlines=True)
         return proc.communicate(str(value))[0]
     except OSError:
         # something bad happened, so just return the input
@@ -25,7 +30,7 @@ def extract_urllinks(value, template='%(text)s (%(url)s)'):
     '''
     html = BeautifulSoup(value)
     for link in html.findAll('a'):
-        text = ''.join(map(unicode, link.contents)).strip()
+        text = ''.join(map(unicode_type, link.contents)).strip()
         if link.get('href') and link.get('href') != text:
             result = template % {
                 'text': text,
