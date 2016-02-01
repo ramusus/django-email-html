@@ -2,6 +2,11 @@ from django import template
 from subprocess import Popen, PIPE
 from bs4 import BeautifulSoup
 
+try:
+    unicode_type = unicode
+except NameError:
+    unicode_type = str
+
 register = template.Library()
 
 @register.filter
@@ -25,7 +30,7 @@ def extract_urllinks(value, template='%(text)s (%(url)s)'):
     '''
     html = BeautifulSoup(value)
     for link in html.findAll('a'):
-        text = ''.join(map(unicode, link.contents)).strip()
+        text = ''.join(map(unicode_type, link.contents)).strip()
         if link.get('href') and link.get('href') != text:
             result = template % {
                 'text': text,
